@@ -1,0 +1,35 @@
+version: '3'
+services:
+  api:
+    container_name: encontre-rs-api
+    build: 
+      context: .
+      target: development
+    depends_on:
+      - database
+    env_file: .env
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./src:/app/src
+      - ./node_modules:/app/node_modules
+    networks:
+      - rs-network
+  database:
+    container_name: encontre-rs-database
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - rs-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: encontre-rs
+      MONGO_INITDB_ROOT_PASSWORD: encontre-rs
+      MONGO_INITDB_DATABASE: encontrers
+networks:
+  rs-network:
+    driver: bridge
+volumes:
+  mongodb_data:
