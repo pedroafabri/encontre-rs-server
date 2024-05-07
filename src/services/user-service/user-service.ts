@@ -2,7 +2,7 @@ import {UserRepository} from "../../repositories";
 import {User} from "@entities";
 import {EntityAlreadyExists, UnauthorizedError} from "@errors";
 import {Firebase} from "@utils";
-import {JWT} from "../../utils/jwt";
+import {JWT} from "@utils";
 
 export class UserService {
 
