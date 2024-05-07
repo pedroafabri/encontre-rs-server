@@ -1,6 +1,5 @@
 import {App, cert, initializeApp} from "firebase-admin/app";
 import {getAuth, DecodedIdToken, UserRecord} from "firebase-admin/auth";
-import * as console from "node:console";
 
 export class Firebase {
     private static _instance: Firebase = null;
