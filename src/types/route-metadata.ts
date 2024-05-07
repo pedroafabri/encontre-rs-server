@@ -1,4 +1,4 @@
-import { METHOD } from "../enum"
+import { METHOD } from "@enums"
 
 export type RouteMetadata = {
   method: METHOD,
