@@ -6,12 +6,14 @@ import {JWT} from "@utils";
 
 export class UserService {
 
-    static async createNewUser(name: string, email: string, firebaseId: string, contacts?: string) {
-        const found = await UserRepository.findOne({ $or: [{ email: email},{ firebaseId: firebaseId }] });
+    static async createNewUser(name: string, email: string, idToken: string, contacts?: string) {
+        const decoded = await Firebase.instance.validateIDToken(idToken).catch((err) => {throw new UnauthorizedError(err.message)});
+
+        const found = await UserRepository.findOne({ $or: [{ email: email},{ firebaseId: decoded.uid }] });
         if (found) {
             throw new EntityAlreadyExists('User already exists.');
         }
-        await UserRepository.create({name, email, firebaseId, contacts} as User);
+        await UserRepository.create({name, email, firebaseId: decoded.uid, contacts} as User);
     }
 
     static async authenticate(idToken: string): Promise<string> {

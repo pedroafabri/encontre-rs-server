@@ -9,8 +9,8 @@ export class UserController {
     @BodyValidator(CreateUserBodyValidator)
      async createUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const {name, email, firebaseId, contacts} = req.body;
-            await UserService.createNewUser(name, email, firebaseId, contacts);
+            const {name, email, idToken, contacts} = req.body;
+            await UserService.createNewUser(name, email, idToken, contacts);
             res.sendStatus(200);
         } catch(e) {
             next(e);
