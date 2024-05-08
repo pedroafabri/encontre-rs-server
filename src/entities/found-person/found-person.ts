@@ -1,12 +1,10 @@
+import {User} from "../user";
+
 export class FoundPerson {
     private _id: string;
     private _name: string;
-    private _email: string;
-    private _phone: string;
-    private _location: string;
     private _description: string;
-    private _createdAt: Date;
-    private _updatedAt: Date;
+    private _foundBy: User
 
 
     get id(): string {
@@ -25,30 +23,6 @@ export class FoundPerson {
         this._name = value;
     }
 
-    get email(): string {
-        return this._email;
-    }
-
-    set email(value: string) {
-        this._email = value;
-    }
-
-    get phone(): string {
-        return this._phone;
-    }
-
-    set phone(value: string) {
-        this._phone = value;
-    }
-
-    get location(): string {
-        return this._location;
-    }
-
-    set location(value: string) {
-        this._location = value;
-    }
-
     get description(): string {
         return this._description;
     }
@@ -57,19 +31,11 @@ export class FoundPerson {
         this._description = value;
     }
 
-    get createdAt(): Date {
-        return this._createdAt;
+    get foundBy(): User {
+        return this._foundBy;
     }
 
-    set createdAt(value: Date) {
-        this._createdAt = value;
-    }
-
-    get updatedAt(): Date {
-        return this._updatedAt;
-    }
-
-    set updatedAt(value: Date) {
-        this._updatedAt = value;
+    set foundBy(value: User) {
+        this._foundBy = value;
     }
 }
