@@ -1,17 +1,9 @@
 export class User {
-    private _id: string;
+    public _id: string;
     private _name: string;
     private _email: string;
     private _contacts: string;
     private _firebaseId: string
-
-    get id(): string {
-        return this._id;
-    }
-
-    set id(value: string) {
-        this._id = value;
-    }
 
     get name(): string {
         return this._name;
