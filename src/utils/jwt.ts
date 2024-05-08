@@ -12,7 +12,8 @@ export class JWT {
     try {
       jwt.verify(token, JWT_SECRET);
       return true;
-    } catch(_) {
+    } catch(e) {
+      console.error(e);
       return false;
     }
   }

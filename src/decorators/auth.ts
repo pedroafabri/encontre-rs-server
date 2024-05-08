@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {UnauthorizedError} from "@errors";
 import {JWT} from "@utils";
 import {UserRepository} from "../repositories";
+import {ObjectId} from "mongodb";
 
 const auth = async (req: Request, res: Response, next: NextFunction, cb: (Request, Response, NextFunction) => null) => {
   const token = req.headers.authorization;
@@ -14,7 +15,7 @@ const auth = async (req: Request, res: Response, next: NextFunction, cb: (Reques
   }
 
   const decoded = JWT.Decode(token);
-  const user = await UserRepository.findOne({ _id: decoded.id });
+  const user = await UserRepository.findOne({ _id: new ObjectId(decoded.id) });
   if(!user) {
     return next(new UnauthorizedError('Invalid Token provided'));
   }
