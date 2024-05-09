@@ -1,4 +1,4 @@
-import {UserRepository} from "../../repositories";
+import {FoundPersonRepository, UserRepository} from "../../repositories";
 import {User} from "@entities";
 import {EntityAlreadyExists, UnauthorizedError} from "@errors";
 import {Firebase} from "@utils";
@@ -26,5 +26,18 @@ export class UserService {
         if(!user) { throw new UnauthorizedError('User does not exist on database.'); }
 
         return JWT.Sign({id: user.id});
+    }
+
+    static async updateUser(user: User, name: string, contacts: string) {
+        user.name = name ? name : user.name;
+        user.contacts = contacts ? contacts : user.contacts;
+
+        await UserRepository.replaceOne(user.id, user);
+        await FoundPersonRepository.updateFoundBy(user.id, user);
+    }
+
+    static async deleteUser(user: User) {
+        await UserRepository.deleteById(user.id);
+        await Firebase.instance.deleteUser(user.firebaseId);
     }
 }
