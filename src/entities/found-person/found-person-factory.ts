@@ -22,11 +22,11 @@ export class FoundPersonFactory extends EntityFactory<FoundPerson>{
     }
 
     toEntity(object: WithId<FoundPerson>): FoundPerson {
-        const fp = new FoundPerson();
-        fp.id = object._id.toString();
-        fp.name = object.name;
-        fp.description = object.description;
-        fp.foundBy = this._userFactory.toEntity(object.foundBy);
-        return fp;
+        return new FoundPerson({
+            id: object._id.toString(),
+            name: object.name,
+            description: object.description,
+            foundBy: this._userFactory.toEntity(object.foundBy),
+        });
     }
 }

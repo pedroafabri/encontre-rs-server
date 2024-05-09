@@ -2,6 +2,7 @@ import {AUTH, POST} from "../../decorators";
 import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
+import {FoundPersonService} from "../../services/found-person-service";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -14,17 +15,15 @@ export class FoundPersonController {
 
     @POST('/found-person')
     @AUTH()
-    async createFoundPerson(request: Request, response: Response, next: NextFunction) {
+    async createFoundPerson(req: Request, res: Response, next: NextFunction) {
         const multerHandler = promisify(upload.single("image"));
 
-        await multerHandler(request, response);
-        const fileDetails = request.file;
-        if (fileDetails) {
-            console.log('Arquivo carregado:', fileDetails.originalname);
-        } else {
-            next(new Error('Nenhum arquivo foi carregado'));
-        }
+        await multerHandler(req, res);
+        const file = req.file;
+        if (!file) { next(new Error('Nenhum arquivo foi carregado')); }
 
-        response.status(200).send('Upload bem-sucedido');
+        const { name, description } = req.body;
+        await FoundPersonService.createFoundPerson(name, description, req['user'], file);
+        res.sendStatus(200);
     }
 }
