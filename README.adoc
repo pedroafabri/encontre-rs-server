@@ -2,7 +2,7 @@
 
 == Intro
 
-Esta aplicação é uma iniciativa voluntária minha e de um grande amigo (que preferiu ficar anônimo) para tentarmos ajudar o Rio Grande do Sul com o que fazemos de melhor: desenvolver software.
+Esta aplicação é uma iniciativa voluntária minha e do Gustavo Sena (frontend) para tentarmos ajudar o Rio Grande do Sul com o que fazemos de melhor: desenvolver software.
 
 Essa aplicação não é perfeita, não seegue os melhores design patterns, não tem a documentação impecável, mas cumpre com o que promete: ajuda quem precisa.
 
