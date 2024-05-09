@@ -1,4 +1,4 @@
-import {AUTH, GET, POST} from "@decorators";
+import {AUTH, GET, PATCH, POST} from "@decorators";
 import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
@@ -32,14 +32,34 @@ export class FoundPersonController {
     @POST('/found-person')
     @AUTH()
     async createFoundPerson(req: Request, res: Response, next: NextFunction) {
-        const multerHandler = promisify(upload.single("image"));
+        try {
+            const multerHandler = promisify(upload.single("image"));
 
-        await multerHandler(req, res);
-        const file = req.file;
-        if (!file) { next(new Error('Nenhum arquivo foi carregado')); }
+            await multerHandler(req, res);
+            const file = req.file;
+            if (!file) { next(new Error('Nenhum arquivo foi carregado')); }
 
-        const { name, description } = req.body;
-        await FoundPersonService.createFoundPerson(name, description, req['user'], file);
-        res.sendStatus(200);
+            const { name, description } = req.body;
+            await FoundPersonService.createFoundPerson(name, description, req['user'], file);
+            res.sendStatus(200);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    @PATCH('/found-person/:id')
+    @AUTH()
+    async updateFoundPerson(req: Request, res: Response, next: NextFunction) {
+        try {
+            const multerHandler = promisify(upload.single("image"));
+            await multerHandler(req, res);
+
+            const {id} = req.params;
+            const { name, description } = req.body;
+            const foundPerson = await FoundPersonService.updateFoundPerson(id, name, description, req.file);
+            res.send(foundPerson);
+        } catch(e) {
+            next(e);
+        }
     }
 }
