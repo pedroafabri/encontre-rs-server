@@ -1,4 +1,4 @@
-import {UserRepository} from "../../repositories";
+import {FoundPersonRepository, UserRepository} from "../../repositories";
 import {User} from "@entities";
 import {EntityAlreadyExists, UnauthorizedError} from "@errors";
 import {Firebase} from "@utils";
@@ -33,6 +33,7 @@ export class UserService {
         user.contacts = contacts ? contacts : user.contacts;
 
         await UserRepository.replaceOne(user.id, user);
+        await FoundPersonRepository.updateFoundBy(user.id, user);
     }
 
     static async deleteUser(user: User) {

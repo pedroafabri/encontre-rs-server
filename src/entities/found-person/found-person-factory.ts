@@ -13,14 +13,11 @@ export class FoundPersonFactory extends EntityFactory<FoundPerson>{
     }
 
     toDatabase(fp: FoundPerson): object {
-        const foundBy = this._userFactory.toDatabase(fp.foundBy);
-        delete foundBy['firebaseId'];
-
         return {
             _id: new ObjectId(fp.id),
             name: fp.name.length ? fp.name : "DESCONHECIDO",
             description: fp.description,
-            foundBy,
+            foundBy: this._userFactory.toDatabase(fp.foundBy),
         }
     }
 
