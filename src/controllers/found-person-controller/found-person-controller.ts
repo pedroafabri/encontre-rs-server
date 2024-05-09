@@ -3,7 +3,6 @@ import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
 import {FoundPersonService} from "../../services/found-person-service";
-import {number} from "joi";
 
 const upload = multer({
     storage: multer.memoryStorage(),

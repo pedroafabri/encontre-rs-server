@@ -1,5 +1,5 @@
 import { User } from "@entities";
-import {FoundPerson, FoundPersonFactory} from "@entities/found-person";
+import {FoundPerson} from "@entities/found-person";
 import {ImageMissingError} from "@errors";
 import { FoundPersonRepository } from "../../repositories";
 import {AWSS3} from "@utils";
