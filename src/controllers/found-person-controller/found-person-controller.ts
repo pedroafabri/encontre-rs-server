@@ -1,8 +1,9 @@
-import {AUTH, GET, POST} from "../../decorators";
+import {AUTH, GET, POST} from "@decorators";
 import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
 import {FoundPersonService} from "../../services/found-person-service";
+import {number} from "joi";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -17,7 +18,12 @@ export class FoundPersonController {
     @AUTH()
     async getFoundPeople(req: Request, res: Response, next: NextFunction) {
         try {
-            const people = await FoundPersonService.getAllFoundPeople();
+            const { search, page, limit } = req.query;
+            const people = await FoundPersonService.getAllFoundPeople({
+                search: search?.toString() ?? '',
+                page: page ? Number(page) : 1,
+                limit: limit ? Number(limit) : 20,
+            });
             res.send(people);
         }catch(e){
             next(e);
