@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { ControllersMetadata } from '../utils';
-import { RouteMetadata } from '../types';
-import { METHOD } from '../enums';
+import { ControllersMetadata } from '@utils';
+import { RouteMetadata } from '@types';
+import { METHOD } from '@enums';
 
 export function POST(path: string) {
   return function (target: object, propertyKey: string) {
