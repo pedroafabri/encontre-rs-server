@@ -2,7 +2,7 @@ import { User } from "@entities";
 import {FoundPerson} from "@entities/found-person";
 import {EntityNotFoundError, ImageMissingError, UnauthorizedError} from "@errors";
 import { FoundPersonRepository } from "../../repositories";
-import {AWSS3} from "@utils";
+import {AWSS3, Telegram} from "@utils";
 import {PaginatedResult} from "@types";
 
 type SearchParameters = {
@@ -19,6 +19,8 @@ export class FoundPersonService {
         await FoundPersonRepository.create(foundPerson);
 
         await AWSS3.instance.uploadBuffer(foundPerson.id, image.buffer, image.mimetype);
+        foundPerson.imageLink = AWSS3.instance.getObjectSignedURL(foundPerson.id);
+        Telegram.instance.notifyNewFoundPerson(foundPerson);
     }
 
     static async getAllFoundPeople(params: SearchParameters): Promise<PaginatedResult<FoundPerson>> {

@@ -63,6 +63,10 @@ export abstract class BaseRepository<T> {
     await this._collection.replaceOne(filter, dbEntity);
   }
 
+  async delete(query: object) {
+    return this._collection.deleteMany(query);
+  }
+
   async deleteById(id: string): Promise<DeleteResult> {
     const filter : Filter<T> = {_id: new ObjectId(id)} as Filter<T>;
     return this._collection.deleteOne(filter);
