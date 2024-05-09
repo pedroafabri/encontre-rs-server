@@ -45,6 +45,12 @@ export class FoundPersonService {
         };
     }
 
+    static async getFoundPerson(id: string): Promise<FoundPerson> {
+        const foundPerson = await FoundPersonRepository.findById(id);
+        if(!foundPerson) {throw new EntityNotFoundError(); }
+        return foundPerson;
+    }
+
     static async updateFoundPerson(id: string, name: string, description: string, image: Express.Multer.File ) {
         const found = await FoundPersonRepository.findById(id);
         if(!found) {throw new EntityNotFoundError(`FoundPerson of ID "${id}" not found.`)}

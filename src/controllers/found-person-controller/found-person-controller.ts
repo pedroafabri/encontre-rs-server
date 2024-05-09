@@ -29,6 +29,17 @@ export class FoundPersonController {
         }
     }
 
+    @GET('/found-person/:id')
+    @AUTH()
+    async getFoundPerson(req: Request, res: Response, next: NextFunction) {
+        try {
+            const found = await FoundPersonService.getFoundPerson(req.params.id);
+            res.send(found);
+        }catch(e) {
+            next(e);
+        }
+    }
+
     @POST('/found-person')
     @AUTH()
     async createFoundPerson(req: Request, res: Response, next: NextFunction) {
