@@ -40,4 +40,13 @@ export class Firebase {
                 .catch(reject);
         })
     }
+
+    async deleteUser(firebaseId: string) {
+        return new Promise((resolve, reject) => {
+            getAuth(this.app)
+                .deleteUser(firebaseId)
+                .then(resolve)
+                .catch(reject)
+        })
+    }
 }
