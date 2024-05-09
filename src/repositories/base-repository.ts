@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EntityFactory } from '@entities/entity-factory';
-import {Collection, OptionalUnlessRequiredId, ObjectId, Filter, UpdateFilter, WithoutId, FindOptions} from 'mongodb';
+import {
+  Collection,
+  OptionalUnlessRequiredId,
+  ObjectId,
+  Filter,
+  UpdateFilter,
+  WithoutId,
+  FindOptions,
+  DeleteResult
+} from 'mongodb';
 import { Database } from '@database';
 
 export abstract class BaseRepository<T> {
@@ -52,5 +61,10 @@ export abstract class BaseRepository<T> {
     const filter : Filter<T> = {_id: new ObjectId(id)} as Filter<T>;
     const dbEntity = this._factory.toDatabase(entity) as WithoutId<T>;
     await this._collection.replaceOne(filter, dbEntity);
+  }
+
+  async deleteById(id: string): Promise<DeleteResult> {
+    const filter : Filter<T> = {_id: new ObjectId(id)} as Filter<T>;
+    return this._collection.deleteOne(filter);
   }
 }

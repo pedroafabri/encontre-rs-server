@@ -1,6 +1,6 @@
 import { User } from "@entities";
 import {FoundPerson} from "@entities/found-person";
-import {EntityNotFoundError, ImageMissingError} from "@errors";
+import {EntityNotFoundError, ImageMissingError, UnauthorizedError} from "@errors";
 import { FoundPersonRepository } from "../../repositories";
 import {AWSS3} from "@utils";
 import {PaginatedResult} from "@types";
@@ -51,9 +51,10 @@ export class FoundPersonService {
         return foundPerson;
     }
 
-    static async updateFoundPerson(id: string, name: string, description: string, image: Express.Multer.File ) {
+    static async updateFoundPerson(id: string, name: string, description: string, image: Express.Multer.File, user: User ) {
         const found = await FoundPersonRepository.findById(id);
         if(!found) {throw new EntityNotFoundError(`FoundPerson of ID "${id}" not found.`)}
+        if(found.foundBy.id !== user.id) {throw new UnauthorizedError('FoundPerson not owned by user.')}
 
         found.name = name ?? found.name;
         found.description = description ?? found.description;
@@ -66,5 +67,13 @@ export class FoundPersonService {
 
         await FoundPersonRepository.replaceOne(found.id, found);
         return found;
+    }
+
+    static async deleteFoundPerson(id: string, user: User) {
+        const found = await FoundPersonRepository.findById(id);
+        if(!found) {throw new EntityNotFoundError(`FoundPerson of ID "${id}" not found.`)}
+        if(found.foundBy.id !== user.id) {throw new UnauthorizedError('FoundPerson not owned by user.')}
+
+        await FoundPersonRepository.deleteById(id);
     }
 }
