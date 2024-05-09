@@ -1,4 +1,4 @@
-import {AUTH, GET, PATCH, POST} from "@decorators";
+import {AUTH, DELETE, GET, PATCH, POST} from "@decorators";
 import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
@@ -65,8 +65,20 @@ export class FoundPersonController {
 
             const {id} = req.params;
             const { name, description } = req.body;
-            const foundPerson = await FoundPersonService.updateFoundPerson(id, name, description, req.file);
+            const foundPerson = await FoundPersonService.updateFoundPerson(id, name, description, req.file, req['user']);
             res.send(foundPerson);
+        } catch(e) {
+            next(e);
+        }
+    }
+
+    @DELETE('/found-person/:id')
+    @AUTH()
+    async deleteFoundPerson(req: Request, res: Response, next: NextFunction) {
+        try{
+            const {id} = req.params;
+            await FoundPersonService.deleteFoundPerson(id, req['user']);
+            res.sendStatus(200);
         } catch(e) {
             next(e);
         }
