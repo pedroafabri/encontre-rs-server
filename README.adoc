@@ -2,7 +2,7 @@
 
 == Intro
 
-Esta aplicação é uma iniciativa voluntária minha e do Gustavo Sena para tentarmos ajudar o Rio Grande do Sul com o que fazemos de melhor: desenvolver software.
+Esta aplicação é uma iniciativa voluntária minha e de um grande amigo (que preferiu ficar anônimo) para tentarmos ajudar o Rio Grande do Sul com o que fazemos de melhor: desenvolver software.
 
 Essa aplicação não é perfeita, não seegue os melhores design patterns, não tem a documentação impecável, mas cumpre com o que promete: ajuda quem precisa.
 
@@ -44,6 +44,21 @@ Que Deus abençoe o Rio Grande do Sul e os gaúchos.
   "token": "Token JWT para enviar no header Authorization"
 }
 ----
+
+==== PATCH /user - Atualiza o usuário atual
+
+Essa rota é protegida pelo header Authorization. O token passado determina quem é o usuário que será alterado.
+
+**BODY:**
+[source,json]
+----
+{
+  "name": "Nome da pessoa",
+  "contacts": "Formas de contato"
+}
+----
+
+**VAI ATUALIZAR SOMENTE OS CAMPOS PASSADOS NA REQUEST!!**
 
 === Found Person
 

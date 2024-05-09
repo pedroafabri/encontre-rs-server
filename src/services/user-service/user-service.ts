@@ -27,4 +27,11 @@ export class UserService {
 
         return JWT.Sign({id: user.id});
     }
+
+    static async updateUser(user: User, name: string, contacts: string) {
+        user.name = name ? name : user.name;
+        user.contacts = contacts ? contacts : user.contacts;
+
+        await UserRepository.replaceOne(user.id, user);
+    }
 }
