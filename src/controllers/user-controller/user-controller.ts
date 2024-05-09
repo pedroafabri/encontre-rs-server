@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express";
-import {POST, BodyValidator} from '@decorators'
-import {AuthenticateUserBodyValidator, CreateUserBodyValidator} from "./validators";
+import {POST, BodyValidator, PATCH, AUTH} from '@decorators'
+import {AuthenticateUserBodyValidator, CreateUserBodyValidator, UpdateUserBodyValidator} from "./validators";
 import {UserService} from "../../services";
 
 export class UserController {
@@ -24,6 +24,19 @@ export class UserController {
             const {idToken} = req.body;
             const token = await UserService.authenticate(idToken)
             res.send({token});
+        } catch(e) {
+            next(e);
+        }
+    }
+
+    @PATCH('/user')
+    @AUTH()
+    @BodyValidator(UpdateUserBodyValidator)
+    async updateUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const {name, contacts} = req.body;
+            await UserService.updateUser(req['user'], name, contacts);
+            res.sendStatus(200);
         } catch(e) {
             next(e);
         }
