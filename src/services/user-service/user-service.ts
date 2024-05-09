@@ -1,14 +1,43 @@
-import {UserRepository} from "../../repositories";
+import {FoundPersonRepository, UserRepository} from "../../repositories";
 import {User} from "@entities";
-import {EntityAlreadyExists} from "@errors";
+import {EntityAlreadyExists, UnauthorizedError} from "@errors";
+import {Firebase} from "@utils";
+import {JWT} from "@utils";
 
 export class UserService {
 
-    static async createNewUser(name: string, email: string, firebaseId: string, contacts?: string) {
-        const found = await UserRepository.findOne({ $or: [{ email: email},{ firebaseId: firebaseId }] });
+    static async createNewUser(name: string, email: string, idToken: string, contacts?: string) {
+        const decoded = await Firebase.instance.validateIDToken(idToken).catch((err) => {throw new UnauthorizedError(err.message)});
+
+        const found = await UserRepository.findOne({ $or: [{ email: email},{ firebaseId: decoded.uid }] });
         if (found) {
             throw new EntityAlreadyExists('User already exists.');
         }
-        await UserRepository.create({name, email, firebaseId, contacts} as User);
+        await UserRepository.create({name, email, firebaseId: decoded.uid, contacts} as User);
+    }
+
+    static async authenticate(idToken: string): Promise<string> {
+        const decoded = await Firebase.instance.validateIDToken(idToken).catch((err) => {throw new UnauthorizedError(err.message)});
+
+        const firebaseUser = await Firebase.instance.getUser(decoded.uid).catch((err) => {throw new UnauthorizedError(err.message)});
+        if(!firebaseUser) { throw new UnauthorizedError('User not found at Firebase.'); }
+
+        const user = await UserRepository.findOne({ firebaseId: decoded.uid });
+        if(!user) { throw new UnauthorizedError('User does not exist on database.'); }
+
+        return JWT.Sign({id: user.id});
+    }
+
+    static async updateUser(user: User, name: string, contacts: string) {
+        user.name = name ? name : user.name;
+        user.contacts = contacts ? contacts : user.contacts;
+
+        await UserRepository.replaceOne(user.id, user);
+        await FoundPersonRepository.updateFoundBy(user.id, user);
+    }
+
+    static async deleteUser(user: User) {
+        await UserRepository.deleteById(user.id);
+        await Firebase.instance.deleteUser(user.firebaseId);
     }
 }

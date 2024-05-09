@@ -1,0 +1,173 @@
+= Servidor Encontre-RS
+
+== Intro
+
+Esta aplicação é uma iniciativa voluntária minha e de um grande amigo (que preferiu ficar anônimo) para tentarmos ajudar o Rio Grande do Sul com o que fazemos de melhor: desenvolver software.
+
+Essa aplicação não é perfeita, não seegue os melhores design patterns, não tem a documentação impecável, mas cumpre com o que promete: ajuda quem precisa.
+
+Que Deus abençoe o Rio Grande do Sul e os gaúchos.
+
+== API DOCS
+
+=== User
+
+==== POST /user - Cria um novo usuário
+
+**BODY:**
+
+[source,json]
+----
+{
+  "idToken": "idToken do Firebase",
+  "email": "email de cadastro",
+  "name": "Nome da pessoa",
+  "contacts": "Formas de contato"
+}
+
+----
+
+==== POST /user/authenticate
+
+**BODY:**
+[source,json]
+----
+{
+  "idToken": "idToken do Firebase"
+}
+----
+
+**RESPONSE:**
+[source,json]
+----
+{
+  "token": "Token JWT para enviar no header Authorization"
+}
+----
+
+'''
+
+==== PATCH /user - Atualiza o usuário atual
+
+Essa rota é protegida pelo header Authorization. O token passado determina quem é o usuário que será alterado.
+
+**BODY:**
+[source,json]
+----
+{
+  "name": "Nome da pessoa",
+  "contacts": "Formas de contato"
+}
+----
+
+'''
+
+**VAI ATUALIZAR SOMENTE OS CAMPOS PASSADOS NA REQUEST!!**
+
+==== DELETE /user - Apaga a conta do usuário
+Essa rota é protegida pelo header Authorization. O token passado determina quem é o usuário que será apagado.
+
+Essa rota também apaga o usuário do Firebase.
+
+'''
+'''
+'''
+
+=== Found Person
+
+**ATENÇÃO: TODAS AS ROTAS EXCETO GET SÃO PROTEGIDAS PELO HEADER AUTHORIZATION.**
+
+==== GET /found-person - Busca todas as pessoas encontradas
+
+QUERY PARAMS:
+search = busca textual, vai buscar por todas as palavras separadas por espaço.
+
+Se algo estiver entre aspas, vai procurar as palavras como uma frase. ex: "olho azul"
+
+Se quiser remover uma palavra da busca é só usar -: -idoso
+
+case-insensitive e diacritic-insensitive
+
+limit = número de resultados pra trazer (default: 20)
+page = página atual da paginação (default: 1)
+
+**RESPONSE:**
+
+[source,json]
+----
+{
+    "results": [
+    {
+        "id": "663c4004b77094ef03ee4a09",
+        "name": "Orlando Oraçudo",
+        "description": "loiro baixo com cardarço amarelo",
+        "foundBy": {
+        "id": "663a9f12572c9eddcd272146",
+        "name": "Pedro Fabri",
+        "email": "pedroafabri@gmail.com",
+        "contacts": null
+    },
+        "imageLink": "https://found-person-images.s3.amazonaws.com/663c4004b77094ef03ee4a09?AWSAccessKeyId=AKIAZQ3DSZAHNFQQCO3M&Expires=1715225534&Signature=qzz6FN2Jd%2FyzdZLWp91psGjQZSY%3D"
+    }
+    ],
+    "currentPage": 1,
+    "totalPages": 3,
+    "totalPeople": 3
+    }
+----
+
+'''
+
+GET /found-person/:id - Busca uma pessoa encontrada por ID
+
+**RESPONSE:**
+
+[source,json]
+----
+{
+    "id": "663c4004b77094ef03ee4a09",
+    "name": "Orlando Oraçudo",
+    "description": "loiro baixo com cardarço amarelo",
+    "foundBy": {
+    "id": "663a9f12572c9eddcd272146",
+    "name": "Pedro Fabri",
+    "email": "pedroafabri@gmail.com",
+    "contacts": null
+    },
+    "imageLink": "https://found-person-images.s3.amazonaws.com/663c4004b77094ef03ee4a09?AWSAccessKeyId=AKIAZQ3DSZAHNFQQCO3M&Expires=1715225534&Signature=qzz6FN2Jd%2FyzdZLWp91psGjQZSY%3D"
+}
+----
+
+'''
+
+==== POST /found-person - Cadastra uma nova pessoa encontrada
+
+**BODY:**
+
+**ATENÇÃO: O Content-Type é multipart/form-data**
+
+[source,text]
+----
+image: imagem da pessoa (obrigatório, máx 2MB)
+name: nome da pessoa (opcional, se não enviado será cadastrado como DESCONHECIDO)
+description: descrição da pessoa (opcional)
+----
+
+==== PATCH /found-person/:id - Atualiza uma pessoa encontrada
+
+**BODY:**
+
+**ATENÇÃO: O Content-Type é multipart/form-data**
+
+[source,text]
+----
+image: imagem da pessoa (opcional, máx 2MB)
+name: nome da pessoa (opcional, se não enviado será cadastrado como DESCONHECIDO)
+description: descrição da pessoa (opcional)
+----
+
+**VAI ATUALIZAR SOMENTE OS CAMPOS PASSADOS NA REQUEST!!**
+
+'''
+
+==== DELETE /found-person/:id - Apaga uma pessoa encontrada
