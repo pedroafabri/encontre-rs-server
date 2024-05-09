@@ -14,7 +14,6 @@ const upload = multer({
 export class FoundPersonController {
 
     @GET('/found-person')
-    @AUTH()
     async getFoundPeople(req: Request, res: Response, next: NextFunction) {
         try {
             const { search, page, limit } = req.query;
@@ -30,7 +29,6 @@ export class FoundPersonController {
     }
 
     @GET('/found-person/:id')
-    @AUTH()
     async getFoundPerson(req: Request, res: Response, next: NextFunction) {
         try {
             const found = await FoundPersonService.getFoundPerson(req.params.id);
