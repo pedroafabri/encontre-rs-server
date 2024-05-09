@@ -1,4 +1,5 @@
 import AWS, {Credentials, S3} from "aws-sdk";
+import {DeleteObjectOutput} from "aws-sdk/clients/s3";
 
 export class AWSS3 {
     private static _instance: AWSS3 = null;
@@ -50,5 +51,19 @@ export class AWSS3 {
         }
 
         return this._s3.getSignedUrl('getObject', params);
+    }
+
+    deleteObject(key: string): Promise<DeleteObjectOutput> {
+        const params = {
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key
+        }
+
+        return new Promise((resolve, reject) => {
+            this._s3.deleteObject(params)
+                .promise()
+                .then(resolve)
+                .catch(reject)
+        })
     }
 }

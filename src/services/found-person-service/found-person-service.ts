@@ -1,6 +1,6 @@
 import { User } from "@entities";
 import {FoundPerson} from "@entities/found-person";
-import {ImageMissingError} from "@errors";
+import {EntityNotFoundError, ImageMissingError} from "@errors";
 import { FoundPersonRepository } from "../../repositories";
 import {AWSS3} from "@utils";
 import {PaginatedResult} from "@types";
@@ -43,5 +43,22 @@ export class FoundPersonService {
             totalPages,
             totalPeople
         };
+    }
+
+    static async updateFoundPerson(id: string, name: string, description: string, image: Express.Multer.File ) {
+        const found = await FoundPersonRepository.findById(id);
+        if(!found) {throw new EntityNotFoundError(`FoundPerson of ID "${id}" not found.`)}
+
+        found.name = name ?? found.name;
+        found.description = description ?? found.description;
+
+        if(image) {
+            await AWSS3.instance.deleteObject(found.id);
+            await AWSS3.instance.uploadBuffer(found.id, image.buffer, image.mimetype)
+            found.imageLink = AWSS3.instance.getObjectSignedURL(found.id);
+        }
+
+        await FoundPersonRepository.replaceOne(found.id, found);
+        return found;
     }
 }
