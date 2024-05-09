@@ -34,4 +34,9 @@ export class UserService {
 
         await UserRepository.replaceOne(user.id, user);
     }
+
+    static async deleteUser(user: User) {
+        await UserRepository.deleteById(user.id);
+        await Firebase.instance.deleteUser(user.firebaseId);
+    }
 }

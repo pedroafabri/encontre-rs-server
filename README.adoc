@@ -45,6 +45,8 @@ Que Deus abençoe o Rio Grande do Sul e os gaúchos.
 }
 ----
 
+'''
+
 ==== PATCH /user - Atualiza o usuário atual
 
 Essa rota é protegida pelo header Authorization. O token passado determina quem é o usuário que será alterado.
@@ -58,7 +60,18 @@ Essa rota é protegida pelo header Authorization. O token passado determina quem
 }
 ----
 
+'''
+
 **VAI ATUALIZAR SOMENTE OS CAMPOS PASSADOS NA REQUEST!!**
+
+==== DELETE /user - Apaga a conta do usuário
+Essa rota é protegida pelo header Authorization. O token passado determina quem é o usuário que será apagado.
+
+Essa rota também apaga o usuário do Firebase.
+
+'''
+'''
+'''
 
 === Found Person
 
