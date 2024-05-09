@@ -25,6 +25,6 @@ export class UserService {
         const user = await UserRepository.findOne({ firebaseId: decoded.uid });
         if(!user) { throw new UnauthorizedError('User does not exist on database.'); }
 
-        return JWT.Sign({id: user._id});
+        return JWT.Sign({id: user.id});
     }
 }

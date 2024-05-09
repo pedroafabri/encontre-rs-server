@@ -5,7 +5,7 @@ import {ObjectId, WithId} from "mongodb";
 export class UserFactory extends EntityFactory<User>{
     toDatabase(user: User): object {
         return {
-            _id: new ObjectId(user._id),
+            _id: new ObjectId(user.id),
             name: user.name,
             email: user.email,
             contacts: user.contacts,
@@ -15,7 +15,7 @@ export class UserFactory extends EntityFactory<User>{
 
     toEntity(object: WithId<User>): User {
         const user = new User();
-        user._id = object._id.toString();
+        user.id = object._id.toString();
         user.name = object.name;
         user.email = object.email;
         user.contacts = object.contacts;
