@@ -1,4 +1,4 @@
-import {AUTH, POST} from "../../decorators";
+import {AUTH, GET, POST} from "../../decorators";
 import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
@@ -12,6 +12,17 @@ const upload = multer({
 });
 
 export class FoundPersonController {
+
+    @GET('/found-person')
+    @AUTH()
+    async getFoundPeople(req: Request, res: Response, next: NextFunction) {
+        try {
+            const people = await FoundPersonService.getAllFoundPeople();
+            res.send(people);
+        }catch(e){
+            next(e);
+        }
+    }
 
     @POST('/found-person')
     @AUTH()

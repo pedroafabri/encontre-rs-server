@@ -2,7 +2,7 @@ import { User } from "@entities";
 import {FoundPerson} from "@entities/found-person";
 import {ImageMissingError} from "@errors";
 import { FoundPersonRepository } from "../../repositories";
-import AWS, {Credentials} from 'aws-sdk';
+import {AWSS3} from "@utils";
 
 export class FoundPersonService {
     static async createFoundPerson(name: string, description: string, foundBy: User, image: Express.Multer.File ) {
@@ -11,30 +11,16 @@ export class FoundPersonService {
         const foundPerson = new FoundPerson({name, description, foundBy});
         await FoundPersonRepository.create(foundPerson);
 
-        const extArray = image.mimetype.split("/");
-        const extension = extArray[extArray.length - 1];
-
-        await this.uploadImageToS3(`${foundPerson.id}.${extension}`, image.buffer);
+        await AWSS3.instance.uploadBuffer(foundPerson.id, image.buffer, image.mimetype);
     }
 
-    private static async uploadImageToS3(userId: string, image: Buffer) {
-        const credentials = new Credentials({
-            accessKeyId: process.env.AWS_S3_ACCESS_KEY,
-            secretAccessKey: process.env.AWS_S3_SECRET,
-        });
-        AWS.config.update({
-            credentials,
-            region: process.env.AWS_S3_REGION,
-        });
+    static async getAllFoundPeople(): Promise<FoundPerson[]> {
+        const people = await FoundPersonRepository.find({});
 
-        const params = {
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: userId,
-            Body: image,
-        };
+        for(const person of people) {
+            person.imageLink = AWSS3.instance.getObjectSignedURL(person.id);
+        }
 
-        const s3 = new AWS.S3();
-
-        await s3.upload(params).promise();
+        return people;
     }
 }
