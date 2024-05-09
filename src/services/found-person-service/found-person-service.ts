@@ -11,8 +11,8 @@ export class FoundPersonService {
         const foundPerson = new FoundPerson({name, description, foundBy});
         await FoundPersonRepository.create(foundPerson);
 
-        let extArray = image.mimetype.split("/");
-        let extension = extArray[extArray.length - 1];
+        const extArray = image.mimetype.split("/");
+        const extension = extArray[extArray.length - 1];
 
         await this.uploadImageToS3(`${foundPerson.id}.${extension}`, image.buffer);
     }
