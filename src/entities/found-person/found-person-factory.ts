@@ -15,7 +15,7 @@ export class FoundPersonFactory extends EntityFactory<FoundPerson>{
     toDatabase(fp: FoundPerson): object {
         return {
             _id: new ObjectId(fp.id),
-            name: fp.name.length ? fp.name : "DESCONHECIDO",
+            name: fp.name?.length ? fp.name : "DESCONHECIDO",
             description: fp.description,
             foundBy: this._userFactory.toDatabase(fp.foundBy),
         }
