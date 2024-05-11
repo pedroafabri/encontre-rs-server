@@ -50,6 +50,7 @@ export class FoundPersonService {
     static async getFoundPerson(id: string): Promise<FoundPerson> {
         const foundPerson = await FoundPersonRepository.findById(id);
         if(!foundPerson) {throw new EntityNotFoundError(); }
+        foundPerson.imageLink = AWSS3.instance.getObjectSignedURL(foundPerson.id);
         return foundPerson;
     }
 

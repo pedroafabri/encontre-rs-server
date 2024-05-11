@@ -32,6 +32,9 @@ dependencies:
   multer:
     specifier: 1.4.5-lts.1
     version: 1.4.5-lts.1
+  reflect-metadata:
+    specifier: ^0.2.2
+    version: 0.2.2
   telegraf:
     specifier: ^4.16.3
     version: 4.16.3
@@ -55,9 +58,6 @@ devDependencies:
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
-  reflect-metadata:
-    specifier: ^0.2.2
-    version: 0.2.2
   ts-node-dev:
     specifier: ^2.0.0
     version: 2.0.0(@types/node@20.12.8)(typescript@5.4.5)
@@ -2706,7 +2706,7 @@ packages:
 
   /reflect-metadata@0.2.2:
     resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
-    dev: true
+    dev: false
 
   /require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
