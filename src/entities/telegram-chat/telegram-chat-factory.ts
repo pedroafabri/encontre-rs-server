@@ -16,6 +16,8 @@ export class TelegramChatFactory extends EntityFactory<TelegramChat>{
         return {
             _id: new ObjectId(chat.id),
             telegramId: chat.telegramId,
+            peopleNotification: chat.peopleNotification,
+            animalsNotification: chat.animalsNotification,
         }
     }
 
@@ -23,6 +25,8 @@ export class TelegramChatFactory extends EntityFactory<TelegramChat>{
         return new TelegramChat({
             id: object._id.toString(),
             telegramId: object.telegramId,
+            peopleNotification: object.peopleNotification,
+            animalsNotification: object.animalsNotification,
         });
     }
 

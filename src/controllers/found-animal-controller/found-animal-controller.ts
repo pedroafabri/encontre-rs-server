@@ -2,24 +2,24 @@ import {AUTH, DELETE, GET, PATCH, POST} from "@decorators";
 import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
-import {FoundPersonService} from "../../services/found-person-service";
+import {FoundAnimalService} from "../../services/found-animal-service";
 import {fileFilter} from "@utils";
 
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 2 * 1024 * 1024, // limit file size to 2MB
+        fileSize: Number(process.env.IMAGE_MAX_SIZE_IN_MB) * 1024 * 1024, // limit file size to 2MB
     },
     fileFilter
 });
 
-export class FoundPersonController {
+export class FoundAnimalController {
 
-    @GET('/found-person')
+    @GET('/found-animal')
     async getFoundPeople(req: Request, res: Response, next: NextFunction) {
         try {
             const { search, page, limit } = req.query;
-            const people = await FoundPersonService.getAllFoundPeople({
+            const people = await FoundAnimalService.getAllFoundAnimals({
                 search: search?.toString() ?? '',
                 page: page ? Number(page) : 1,
                 limit: limit ? Number(limit) : 20,
@@ -30,17 +30,17 @@ export class FoundPersonController {
         }
     }
 
-    @GET('/found-person/:id')
+    @GET('/found-animal/:id')
     async getFoundPerson(req: Request, res: Response, next: NextFunction) {
         try {
-            const found = await FoundPersonService.getFoundPerson(req.params.id);
+            const found = await FoundAnimalService.getFoundAnimal(req.params.id);
             res.send(found);
         }catch(e) {
             next(e);
         }
     }
 
-    @POST('/found-person')
+    @POST('/found-animal')
     @AUTH()
     async createFoundPerson(req: Request, res: Response, next: NextFunction) {
         try {
@@ -50,15 +50,15 @@ export class FoundPersonController {
             const file = req.file;
             if (!file) { next(new Error('Nenhum arquivo foi carregado')); }
 
-            const { name, description } = req.body;
-            await FoundPersonService.createFoundPerson(name, description, req['user'], file);
+            const { name, description, animalType } = req.body;
+            await FoundAnimalService.createFoundAnimal(name, description, req['user'], file, animalType);
             res.sendStatus(200);
         } catch (e) {
             next(e);
         }
     }
 
-    @PATCH('/found-person/:id')
+    @PATCH('/found-animal/:id')
     @AUTH()
     async updateFoundPerson(req: Request, res: Response, next: NextFunction) {
         try {
@@ -66,20 +66,20 @@ export class FoundPersonController {
             await multerHandler(req, res);
 
             const {id} = req.params;
-            const { name, description } = req.body;
-            const foundPerson = await FoundPersonService.updateFoundPerson(id, name, description, req.file, req['user']);
+            const { name, description, animalType } = req.body;
+            const foundPerson = await FoundAnimalService.updateFoundAnimal(id, name, description, animalType, req.file, req['user']);
             res.send(foundPerson);
         } catch(e) {
             next(e);
         }
     }
 
-    @DELETE('/found-person/:id')
+    @DELETE('/found-animal/:id')
     @AUTH()
     async deleteFoundPerson(req: Request, res: Response, next: NextFunction) {
         try{
             const {id} = req.params;
-            await FoundPersonService.deleteFoundPerson(id, req['user']);
+            await FoundAnimalService.deleteFoundAnimal(id, req['user']);
             res.sendStatus(200);
         } catch(e) {
             next(e);
