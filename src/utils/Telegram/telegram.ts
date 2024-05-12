@@ -57,7 +57,7 @@ export class Telegram {
                 try {
                     await this._bot.telegram.sendPhoto(chat.telegramId, Input.fromURL(animal.imageLink), {
                         caption: fmt`
-                    ${bold(`${this.getAnimalTypeText(animal)} ENCONTRADO:`)}\n${animal.name}\n\nConhece esse animal? ${link('Entre em contato.', `https://encontrers.com.br/found-animal/${animal.id}`)}
+                    ${bold(`${this.getAnimalTypeText(animal)} ENCONTRADO:`)}\n${animal.name ?? ""}\n\nConhece esse animal? ${link('Entre em contato.', `https://encontrers.com.br/found-animal/${animal.id}`)}
                 `
                     })
                 } catch (e) {
