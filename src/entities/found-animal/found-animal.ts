@@ -1,13 +1,12 @@
 import {User} from "../user";
 import {ObjectId} from "mongodb";
-import {AnimalType} from "../../types";
 
 type CONSTRUCTOR_PARAMS = {
     id?: string,
     name?: string,
     description?: string,
     foundBy?: User,
-    animalType?: AnimalType
+    animalType?: string
 }
 
 export class FoundAnimal {
@@ -16,7 +15,7 @@ export class FoundAnimal {
     public description: string;
     public foundBy: User;
     public imageLink: string;
-    public animalType: AnimalType;
+    public animalType: string;
 
     constructor({id, name, description, foundBy, animalType} : CONSTRUCTOR_PARAMS) {
         this.id = id ?? new ObjectId().toString();

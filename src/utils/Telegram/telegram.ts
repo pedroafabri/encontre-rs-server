@@ -3,6 +3,7 @@ import {FoundPerson} from "@entities/found-person";
 import {TelegramChatRepository} from "../../repositories";
 import {TelegramChat} from "@entities/telegram-chat";
 import {bold, fmt, link} from "telegraf/format";
+import {FoundAnimal} from "@entities/found-animal";
 
 export class Telegram{
     public static instance: Telegram = null;
@@ -33,6 +34,10 @@ export class Telegram{
 
         }
 
+    }
+
+    public async notifyNewFoundAnimal(animal: FoundAnimal) {
+        console.error('NOT YET IMPLEMENTED');
     }
 
     private initAction() {
