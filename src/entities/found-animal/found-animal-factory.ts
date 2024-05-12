@@ -15,7 +15,7 @@ export class FoundAnimalFactory extends EntityFactory<FoundAnimal>{
     toDatabase(fa: FoundAnimal): object {
         return {
             _id: new ObjectId(fa.id),
-            name: fa.name?.length ? fa.name : "NÃO POSSUI",
+            name: fa.name?.length ? fa.name : "",
             description: fa.description,
             foundBy: this._userFactory.toDatabase(fa.foundBy),
             animalType: fa.animalType,

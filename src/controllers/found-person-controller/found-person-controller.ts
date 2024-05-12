@@ -3,12 +3,14 @@ import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
 import {FoundPersonService} from "../../services/found-person-service";
+import {fileFilter} from "@utils";
 
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
         fileSize: 2 * 1024 * 1024, // limit file size to 2MB
     },
+    fileFilter
 });
 
 export class FoundPersonController {

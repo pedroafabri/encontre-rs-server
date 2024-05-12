@@ -3,12 +3,14 @@ import {Request, Response, NextFunction} from "express";
 import multer from "multer";
 import { promisify } from "util";
 import {FoundAnimalService} from "../../services/found-animal-service";
+import {fileFilter} from "@utils";
 
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
         fileSize: Number(process.env.IMAGE_MAX_SIZE_IN_MB) * 1024 * 1024, // limit file size to 2MB
     },
+    fileFilter
 });
 
 export class FoundAnimalController {
